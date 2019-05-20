@@ -25,7 +25,6 @@ namespace Dogged.Native
 
         /// <summary>
         /// Determine if the blob content is binary or not.
-
         /// <para>
         /// The heuristic used to guess if a file is binary is taken from core git:
         /// Searching for NUL bytes and looking for a reasonable ratio of printable
@@ -69,6 +68,9 @@ namespace Dogged.Native
         /// <returns>Raw size of the blob in bytes</returns>
         [DllImport(libgit2_dll, CallingConvention = CallingConvention.Cdecl)]
         public static extern unsafe long git_blob_rawsize(git_blob* blob);
+
+        [DllImport(libgit2_dll, CallingConvention = CallingConvention.Cdecl)]
+        public static extern unsafe void git_buf_dispose(git_buf* buf);
 
         /// <summary>
         /// Clone a remote repository.
@@ -138,6 +140,123 @@ namespace Dogged.Native
         /// <returns>A pointer to the tree's object id</returns>
         [DllImport(libgit2_dll, CallingConvention = CallingConvention.Cdecl)]
         public static extern unsafe git_oid* git_commit_tree_id(git_commit* commit);
+
+        [DllImport(libgit2_dll, CallingConvention = CallingConvention.Cdecl)]
+        public static extern unsafe int git_config_delete_entry(
+            git_config* cfg,
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalCookie = Utf8Marshaler.ToNative, MarshalTypeRef = typeof(Utf8Marshaler))] string name);
+
+        [DllImport(libgit2_dll, CallingConvention = CallingConvention.Cdecl)]
+        public static extern unsafe int git_config_lock(out IntPtr txn, git_config* config);
+
+        [DllImport(libgit2_dll, CallingConvention = CallingConvention.Cdecl)]
+        public static extern unsafe int git_config_delete_multivar(
+            git_config* cfg,
+             [MarshalAs(UnmanagedType.CustomMarshaler, MarshalCookie = Utf8Marshaler.ToNative, MarshalTypeRef = typeof(Utf8Marshaler))] string name,
+             [MarshalAs(UnmanagedType.CustomMarshaler, MarshalCookie = Utf8Marshaler.ToNative, MarshalTypeRef = typeof(Utf8Marshaler))] string regexp);
+
+        [DllImport(libgit2_dll, CallingConvention = CallingConvention.Cdecl)]
+        public static extern unsafe int git_config_find_global(git_buf* path);
+
+        [DllImport(libgit2_dll, CallingConvention = CallingConvention.Cdecl)]
+        public static extern unsafe int git_config_find_system(git_buf* path);
+
+        [DllImport(libgit2_dll, CallingConvention = CallingConvention.Cdecl)]
+        public static extern unsafe int git_config_find_xdg(git_buf* path);
+
+        [DllImport(libgit2_dll, CallingConvention = CallingConvention.Cdecl)]
+        public static extern unsafe int git_config_find_programdata(git_buf* path);
+
+        [DllImport(libgit2_dll, CallingConvention = CallingConvention.Cdecl)]
+        public static extern unsafe void git_config_free(git_config* cfg);
+
+        [DllImport(libgit2_dll, CallingConvention = CallingConvention.Cdecl)]
+        public static extern unsafe void git_config_entry_free(git_config_entry* entry);
+
+        [DllImport(libgit2_dll, CallingConvention = CallingConvention.Cdecl)]
+        public static extern unsafe int git_config_get_entry(
+            out git_config_entry* entry,
+            git_config* cfg,
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalCookie = Utf8Marshaler.ToNative, MarshalTypeRef = typeof(Utf8Marshaler))] string name);
+
+        [DllImport(libgit2_dll, CallingConvention = CallingConvention.Cdecl)]
+        public static extern unsafe int git_config_add_file_ondisk(
+            git_config* cfg,
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalCookie = Utf8Marshaler.ToNative, MarshalTypeRef = typeof(Utf8Marshaler))] string path,
+            uint level,
+            git_repository* repo,
+            [MarshalAs(UnmanagedType.Bool)] bool force);
+
+        [DllImport(libgit2_dll, CallingConvention = CallingConvention.Cdecl)]
+        public static extern unsafe int git_config_new(out git_config* cfg);
+
+        [DllImport(libgit2_dll, CallingConvention = CallingConvention.Cdecl)]
+        public static extern unsafe int git_config_open_level(
+            out git_config* cfg,
+            git_config* parent,
+            uint level);
+
+        [DllImport(libgit2_dll, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int git_config_parse_bool(
+            [MarshalAs(UnmanagedType.Bool)] out bool value,
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalCookie = Utf8Marshaler.ToNative, MarshalTypeRef = typeof(Utf8Marshaler))] string valueToParse);
+
+        [DllImport(libgit2_dll, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int git_config_parse_int32(
+            [MarshalAs(UnmanagedType.I4)] out int value,
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalCookie = Utf8Marshaler.ToNative, MarshalTypeRef = typeof(Utf8Marshaler))] string valueToParse);
+
+        [DllImport(libgit2_dll, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int git_config_parse_int64(
+            [MarshalAs(UnmanagedType.I8)] out long value,
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalCookie = Utf8Marshaler.ToNative, MarshalTypeRef = typeof(Utf8Marshaler))] string valueToParse);
+
+        [DllImport(libgit2_dll, CallingConvention = CallingConvention.Cdecl)]
+        public static extern unsafe int git_config_set_bool(
+            git_config* cfg,
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalCookie = Utf8Marshaler.ToNative, MarshalTypeRef = typeof(Utf8Marshaler))] string name,
+            [MarshalAs(UnmanagedType.Bool)] bool value);
+
+        [DllImport(libgit2_dll, CallingConvention = CallingConvention.Cdecl)]
+        public static extern unsafe int git_config_set_int32(
+            git_config* cfg,
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalCookie = Utf8Marshaler.ToNative, MarshalTypeRef = typeof(Utf8Marshaler))] string name,
+            int value);
+
+        [DllImport(libgit2_dll, CallingConvention = CallingConvention.Cdecl)]
+        public static extern unsafe int git_config_set_int64(
+            git_config* cfg,
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalCookie = Utf8Marshaler.ToNative, MarshalTypeRef = typeof(Utf8Marshaler))] string name,
+            long value);
+
+        [DllImport(libgit2_dll, CallingConvention = CallingConvention.Cdecl)]
+        public static extern unsafe int git_config_set_string(
+            git_config* cfg,
+             [MarshalAs(UnmanagedType.CustomMarshaler, MarshalCookie = Utf8Marshaler.ToNative, MarshalTypeRef = typeof(Utf8Marshaler))] string name,
+             [MarshalAs(UnmanagedType.CustomMarshaler, MarshalCookie = Utf8Marshaler.ToNative, MarshalTypeRef = typeof(Utf8Marshaler))] string value);
+
+        [DllImport(libgit2_dll, CallingConvention = CallingConvention.Cdecl)]
+        public static extern unsafe int git_config_foreach(
+            git_config* cfg,
+            config_foreach_callback callback,
+            IntPtr payload);
+
+        [DllImport(libgit2_dll, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int git_config_iterator_glob_new(
+            out IntPtr iter,
+            IntPtr cfg,
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalCookie = Utf8Marshaler.ToNative, MarshalTypeRef = typeof(Utf8Marshaler))] string regexp);
+
+        [DllImport(libgit2_dll, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int git_config_next(
+            out IntPtr entry,
+            IntPtr iter);
+
+        [DllImport(libgit2_dll, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void git_config_iterator_free(IntPtr iter);
+
+        [DllImport(libgit2_dll, CallingConvention = CallingConvention.Cdecl)]
+        public static extern unsafe int git_config_snapshot(out git_config* @out, git_config* config);
 
         /// <summary>
         /// Returns the information (class and message) for the last error
